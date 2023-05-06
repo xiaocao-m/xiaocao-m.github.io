@@ -4,11 +4,36 @@
   
   
   <entry>
+    <title>Hexo搭建个人博客+部署到github</title>
+    <link href="/2023/05/06/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2-%E9%83%A8%E7%BD%B2%E5%88%B0github/"/>
+    <url>/2023/05/06/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2-%E9%83%A8%E7%BD%B2%E5%88%B0github/</url>
+    
+    <content type="html"><![CDATA[<h1 id="Hexo搭建个人博客-部署到github"><a href="#Hexo搭建个人博客-部署到github" class="headerlink" title="Hexo搭建个人博客+部署到github"></a>Hexo搭建个人博客+部署到github</h1><img src="/2023/05/06/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2-%E9%83%A8%E7%BD%B2%E5%88%B0github/2.png" class="" title="zheshi">]]></content>
+    
+    
+    <categories>
+      
+      <category>Hexo</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Hexo</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>测试文章</title>
     <link href="/2023/05/05/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/"/>
     <url>/2023/05/05/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</url>
     
-    <content type="html"><![CDATA[<h1 id="这是一篇测试文章"><a href="#这是一篇测试文章" class="headerlink" title="这是一篇测试文章"></a>这是一篇测试文章</h1><p>！<a href="%E6%B5%8B%E8%AF%95.png">测试图片</a></p><h2 id="这是二级标题"><a href="#这是二级标题" class="headerlink" title="这是二级标题"></a>这是二级标题</h2><h3 id="这是三级标题"><a href="#这是三级标题" class="headerlink" title="这是三级标题"></a>这是三级标题</h3><p><strong>加粗</strong></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="这是一篇测试文章"><a href="#这是一篇测试文章" class="headerlink" title="这是一篇测试文章"></a>这是一篇测试文章</h1><p><img src="./%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/%E6%B5%8B%E8%AF%95.png" alt="s"></p><h2 id="这是二级标题"><a href="#这是二级标题" class="headerlink" title="这是二级标题"></a>这是二级标题</h2><h3 id="这是三级标题"><a href="#这是三级标题" class="headerlink" title="这是三级标题"></a>这是三级标题</h3><p><strong>加粗</strong></p>]]></content>
     
     
     
