@@ -1,0 +1,736 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="xiaocao">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、模型结构原始数据-&gt;PCA降维-&gt;三层3DCNN-&gt;view数据到2D卷积能用的格式-&gt;一层2DCNN-&gt;fc+Dropout-&gt;outputs  具体网络参数如下：  二、代码2.1 流程 定义模型 数据预处理 构建Dataset and DataLoader 定义损失函数和优化器 定义训练和测试函数 结果处理  2.2 定义模型在init中定义了conv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HybirdSN HSI classification">
+<meta property="og:url" content="http://example.com/2023/05/08/HybirdSN-HSI-classification/index.html">
+<meta property="og:site_name" content="xiaocao&#39;s Blog">
+<meta property="og:description" content="一、模型结构原始数据-&gt;PCA降维-&gt;三层3DCNN-&gt;view数据到2D卷积能用的格式-&gt;一层2DCNN-&gt;fc+Dropout-&gt;outputs  具体网络参数如下：  二、代码2.1 流程 定义模型 数据预处理 构建Dataset and DataLoader 定义损失函数和优化器 定义训练和测试函数 结果处理  2.2 定义模型在init中定义了conv">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/05/08/HybirdSN-HSI-classification/0%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="http://example.com/2023/05/08/HybirdSN-HSI-classification/0%E7%BD%91%E7%BB%9C%E5%8F%82%E6%95%B0.png">
+<meta property="article:published_time" content="2023-05-08T12:03:51.000Z">
+<meta property="article:modified_time" content="2023-05-08T13:20:07.739Z">
+<meta property="article:author" content="xiaocao">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2023/05/08/HybirdSN-HSI-classification/0%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>HybirdSN HSI classification - xiaocao&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>xiaocao&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="HybirdSN HSI classification"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-05-08 20:03" pubdate>
+          2023年5月8日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          81 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">HybirdSN HSI classification</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2023年5月8日 晚上
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一、模型结构"><a href="#一、模型结构" class="headerlink" title="一、模型结构"></a>一、模型结构</h1><p>原始数据-&gt;PCA降维-&gt;三层3DCNN-&gt;view数据到2D卷积能用的格式-&gt;一层2DCNN-&gt;fc+Dropout-&gt;outputs</p>
+<p><img src="0%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84.png" srcset="/img/loading.gif" lazyload></p>
+<p>具体网络参数如下：</p>
+<p><img src="0%E7%BD%91%E7%BB%9C%E5%8F%82%E6%95%B0.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="二、代码"><a href="#二、代码" class="headerlink" title="二、代码"></a>二、代码</h1><h2 id="2-1-流程"><a href="#2-1-流程" class="headerlink" title="2.1 流程"></a>2.1 流程</h2><ol>
+<li>定义模型</li>
+<li>数据预处理</li>
+<li>构建Dataset and DataLoader</li>
+<li>定义损失函数和优化器</li>
+<li>定义训练和测试函数</li>
+<li>结果处理</li>
+</ol>
+<h2 id="2-2-定义模型"><a href="#2-2-定义模型" class="headerlink" title="2.2 定义模型"></a>2.2 定义模型</h2><p>在init中定义了conv3d、conv2d和fc块，然后在forward中定义网络前向传播的顺序。</p>
+<p>==两点注意==：三维卷积后的数据在进行二维卷积之前要进行数据变换、全连接层前的数据变换</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">HybirdSN</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, in_channels=<span class="hljs-number">1</span>, out_channels=<span class="hljs-number">16</span></span>):<br>        <span class="hljs-built_in">super</span>().__init__()<br>        self.conv3d = nn.Sequential(<br>            nn.Conv3d(in_channels, out_channels=<span class="hljs-number">8</span>, kernel_size=(<span class="hljs-number">7</span>,<span class="hljs-number">3</span>,<span class="hljs-number">3</span>)),<br>            nn.ReLU(),<br>            nn.Conv3d(in_channels=<span class="hljs-number">8</span>, out_channels=<span class="hljs-number">16</span>, kernel_size=(<span class="hljs-number">5</span>,<span class="hljs-number">3</span>,<span class="hljs-number">3</span>)),<br>            nn.ReLU(),<br>            nn.Conv3d(in_channels=<span class="hljs-number">16</span>, out_channels=<span class="hljs-number">32</span>, kernel_size=(<span class="hljs-number">3</span>,<span class="hljs-number">3</span>,<span class="hljs-number">3</span>)),<br>            nn.ReLU()<br>        )<br><br>        self.conv2d = nn.Sequential(<br>            nn.Conv2d(in_channels=<span class="hljs-number">18</span>*<span class="hljs-number">32</span>, out_channels=<span class="hljs-number">64</span>, kernel_size=(<span class="hljs-number">3</span>,<span class="hljs-number">3</span>)),<br>            nn.ReLU()<br>        )<br><br>        self.fc = nn.Sequential(<br>            nn.Linear(in_features=<span class="hljs-number">17</span>*<span class="hljs-number">17</span>*<span class="hljs-number">64</span>, out_features=<span class="hljs-number">256</span>),<br>            nn.ReLU(),<br>            nn.Dropout(p=<span class="hljs-number">0.4</span>),<br>            nn.Linear(in_features=<span class="hljs-number">256</span>, out_features=<span class="hljs-number">128</span>),<br>            nn.ReLU(),<br>            nn.Dropout(p=<span class="hljs-number">0.4</span>),<br>            nn.Linear(<span class="hljs-number">128</span>, out_channels)<br>        )<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):<br>        x = self.conv3d(x)<br>        <span class="hljs-comment"># 将经过3D卷积后的五维数据处理成2D卷积所需要的四维数据</span><br>        x = x.view(-<span class="hljs-number">1</span>, x.size()[<span class="hljs-number">1</span>]*x.size()[<span class="hljs-number">2</span>], x.size()[<span class="hljs-number">3</span>], x.size()[<span class="hljs-number">4</span>])<br>        x = self.conv2d(x)<br>        x = x.view(x.size()[<span class="hljs-number">0</span>], -<span class="hljs-number">1</span>)<br>        x = self.fc(x)<br>        <span class="hljs-keyword">return</span> x<br><span class="hljs-comment"># 实例化</span><br>mynet = HybirdSN()<br>mynet.cuda()<br><span class="hljs-comment"># 输出网络结构,这里随便给定一个符合格式的输入看网络能跑通不</span><br><span class="hljs-comment"># summary(mynet, (256, 1,30,25,25))</span><br></code></pre></td></tr></table></figure>
+
+<p>输出的网络结构如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs bash">==========================================================================================<br>Layer (<span class="hljs-built_in">type</span>:depth-idx)                   Output Shape              Param <span class="hljs-comment">#</span><br>==========================================================================================<br>HybirdSN                                 [256, 16]                 --<br>├─Sequential: 1-1                        [256, 32, 18, 19, 19]     --<br>│    └─Conv3d: 2-1                       [256, 8, 24, 23, 23]      512<br>│    └─ReLU: 2-2                         [256, 8, 24, 23, 23]      --<br>│    └─Conv3d: 2-3                       [256, 16, 20, 21, 21]     5,776<br>│    └─ReLU: 2-4                         [256, 16, 20, 21, 21]     --<br>│    └─Conv3d: 2-5                       [256, 32, 18, 19, 19]     13,856<br>│    └─ReLU: 2-6                         [256, 32, 18, 19, 19]     --<br>├─Sequential: 1-2                        [256, 64, 17, 17]         --<br>│    └─Conv2d: 2-7                       [256, 64, 17, 17]         331,840<br>│    └─ReLU: 2-8                         [256, 64, 17, 17]         --<br>├─Sequential: 1-3                        [256, 16]                 --<br>│    └─Linear: 2-9                       [256, 256]                4,735,232<br>│    └─ReLU: 2-10                        [256, 256]                --<br>│    └─Dropout: 2-11                     [256, 256]                --<br>│    └─Linear: 2-12                      [256, 128]                32,896<br>│    └─ReLU: 2-13                        [256, 128]                --<br>│    └─Dropout: 2-14                     [256, 128]                --<br>│    └─Linear: 2-15                      [256, 16]                 2,064<br>==========================================================================================<br>Total params: 5,122,176<br>Trainable params: 5,122,176<br>Non-trainable params: 0<br>Total mult-adds (G): 63.53<br>==========================================================================================<br>Input size (MB): 19.20<br>Forward/backward pass size (MB): 961.58<br>Params size (MB): 20.49<br>Estimated Total Size (MB): 1001.27<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-3-数据预处理"><a href="#2-3-数据预处理" class="headerlink" title="2.3 数据预处理"></a>2.3 数据预处理</h2><p>==疑问==：这里代码是将一个样本周围的像素提取来代替该样本，但是如果提取的一个patch内包含测试样本的话，是否造成了测试集的泄漏？</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># PCA降维</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">HSI_PCA</span>(<span class="hljs-params">X, num_components</span>):<br>    newX = np.reshape(X, (-<span class="hljs-number">1</span>, X.shape[<span class="hljs-number">2</span>]))<br>    pca = PCA(n_components=num_components, whiten=<span class="hljs-literal">True</span>)<br>    newX = pca.fit_transform(newX)<br>    newX = np.reshape(newX, (X.shape[<span class="hljs-number">0</span>], X.shape[<span class="hljs-number">0</span>], num_components))<br>    <span class="hljs-keyword">return</span> newX<br><br><span class="hljs-comment"># 对单个像素周围提取 patch 时，边缘像素就无法取了，因此，给这部分像素进行 padding 操作</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">padWithZeros</span>(<span class="hljs-params">X, margin=<span class="hljs-number">2</span></span>):<br>    newX = np.zeros((X.shape[<span class="hljs-number">0</span>]+<span class="hljs-number">2</span>*margin, X.shape[<span class="hljs-number">1</span>]+<span class="hljs-number">2</span>*margin, X.shape[<span class="hljs-number">2</span>]))<br>    x_offset = margin<br>    y_offset = margin<br>    newX[x_offset:X.shape[<span class="hljs-number">0</span>] + x_offset, y_offset:X.shape[<span class="hljs-number">1</span>]+y_offset, :] = X<br>    <span class="hljs-keyword">return</span> newX<br><br><span class="hljs-comment"># 在每个像素周围提取patch</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">createImageCubes</span>(<span class="hljs-params">X, y, windowsize=<span class="hljs-number">5</span>, removeZeroLabels=<span class="hljs-literal">True</span></span>):<br>    <span class="hljs-comment"># 给X做padding</span><br>    margin = <span class="hljs-built_in">int</span>((windowsize - <span class="hljs-number">1</span>)/<span class="hljs-number">2</span>)<br>    zeroPaddedX = padWithZeros(X,margin=margin)<br>    <span class="hljs-comment"># split patches</span><br>    patchData = np.zeros((X.shape[<span class="hljs-number">0</span>]*X.shape[<span class="hljs-number">1</span>], windowsize,windowsize, X.shape[<span class="hljs-number">2</span>]))<br>    patchLabels = np.zeros((X.shape[<span class="hljs-number">0</span>] * X.shape[<span class="hljs-number">1</span>]))<br>    patchIndex = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">for</span> r <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(margin, zeroPaddedX.shape[<span class="hljs-number">0</span>]-margin):<br>        <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(margin, zeroPaddedX.shape[<span class="hljs-number">1</span>]-margin):<br>            patch = zeroPaddedX[r-margin:r+margin+<span class="hljs-number">1</span>, c-margin:c+margin+<span class="hljs-number">1</span>]<br>            patchData[patchIndex, :,:,:] = patch<br>            patchLabels[patchIndex] = y[r-margin, c-margin]<br>            patchIndex += <span class="hljs-number">1</span><br>    <span class="hljs-keyword">if</span> removeZeroLabels:<br>        patchData = patchData[patchLabels&gt;<span class="hljs-number">0</span>,:,:,:]<br>        patchLabels = patchLabels[patchLabels&gt;<span class="hljs-number">0</span>]<br>        patchLabels -= <span class="hljs-number">1</span><br>        <span class="hljs-keyword">return</span> patchData, patchLabels<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">splitTrainTestSet</span>(<span class="hljs-params">X, y, testRatio, randomState=<span class="hljs-number">345</span></span>):<br>    X_train, X_test, y_train, y_test = 					   							       train_test_split(X,y,test_size=testRatio,random_state=randomState)<br>    <span class="hljs-keyword">return</span> X_train, X_test, y_train, y_test<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">AA_andEachClassAccuracy</span>(<span class="hljs-params">confusion_matrix</span>):<br>    counter = confusion_matrix.shape[<span class="hljs-number">0</span>]<br>    list_diag = np.diag(confusion_matrix)<br>    list_raw_sum = np.<span class="hljs-built_in">sum</span>(confusion_matrix, axis=<span class="hljs-number">1</span>)<br>    each_acc = np.nan_to_num(truediv(list_diag, list_raw_sum))<br>    average_acc = np.mean(each_acc)<br>    <span class="hljs-keyword">return</span> each_acc, average_acc<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">reports</span>(<span class="hljs-params">y_pred, y_test</span>):<br>    oa = accuracy_score(y_test, y_pred)<br>    confusion = confusion_matrix(y_test, y_pred)<br>    each_acc, aa = AA_andEachClassAccuracy(confusion)<br>    kappa = cohen_kappa_score(y_test, y_pred)<br><br>    <span class="hljs-keyword">return</span> oa, each_acc, aa, kappa<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-4-构建Dataset-and-DataLoader"><a href="#2-4-构建Dataset-and-DataLoader" class="headerlink" title="2.4 构建Dataset and DataLoader"></a>2.4 构建Dataset and DataLoader</h2><p>在pytorch中，图像数据的预处理一般是通过Dataset 和 DataLoader来完成的，对于</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><code class="hljs python">X = sio.loadmat(<span class="hljs-string">&#x27;./dataset/Indian_pines_corrected.mat&#x27;</span>)[<span class="hljs-string">&#x27;indian_pines_corrected&#x27;</span>]<br>Y = sio.loadmat(<span class="hljs-string">&#x27;./dataset/Indian_pines_gt.mat&#x27;</span>)[<span class="hljs-string">&#x27;indian_pines_gt&#x27;</span>]<br><br>class_num = <span class="hljs-number">16</span><br>test_ratio = <span class="hljs-number">0.70</span><br>patch_size = <span class="hljs-number">25</span><br>pca_components = <span class="hljs-number">30</span><br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;HSI data shape:&#x27;</span>, X.shape)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Label shape:&#x27;</span>, Y.shape)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;\n... ...PCA... ...&#x27;</span>)<br>X_pca = HSI_PCA(X, num_components=pca_components)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;\n... ... create data cubes ... ...&#x27;</span>)<br>X_pca, y = createImageCubes(X_pca, Y, windowsize=patch_size)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Data cube X shape: &#x27;</span>, X_pca.shape)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Data cube y shape: &#x27;</span>, y.shape)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;\n... ... create train &amp; test data ... ...&#x27;</span>)<br>Xtrain, Xtest, ytrain, ytest = splitTrainTestSet(X_pca, y, test_ratio)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Xtrain shape: &#x27;</span>, Xtrain.shape)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Xtest  shape: &#x27;</span>, Xtest.shape)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;ytrain  shape: &#x27;</span>, ytrain.shape)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;ytest  shape: &#x27;</span>, ytest.shape)<br><br><br><span class="hljs-comment"># 改变 Xtrain, Ytrain 的形状,将数据升到五维</span><br>Xtrain = Xtrain.reshape(-<span class="hljs-number">1</span>, patch_size, patch_size, pca_components, <span class="hljs-number">1</span>)<br>Xtest  = Xtest.reshape(-<span class="hljs-number">1</span>, patch_size, patch_size, pca_components, <span class="hljs-number">1</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;before transpose: Xtrain shape: &#x27;</span>, Xtrain.shape)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;before transpose: Xtest  shape: &#x27;</span>, Xtest.shape)<br><br><span class="hljs-comment"># 为了适应 pytorch 结构，数据要做 transpose</span><br><span class="hljs-comment"># 这里是因为pytorch的卷积核结构为(int_channels, 高，长，宽),高对应的就是输入的特征维度</span><br><span class="hljs-comment"># 所以要将数据调整为（样本数，int_channels, 30，25，25）30为降维后的维数，25为提取的pactch_size</span><br>Xtrain = Xtrain.transpose(<span class="hljs-number">0</span>, <span class="hljs-number">4</span>, <span class="hljs-number">3</span>,<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br>Xtest  = Xtest.transpose(<span class="hljs-number">0</span>, <span class="hljs-number">4</span>,<span class="hljs-number">3</span>, <span class="hljs-number">1</span>,<span class="hljs-number">2</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;after transpose: Xtrain shape: &#x27;</span>, Xtrain.shape)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;after transpose: Xtest  shape: &#x27;</span>, Xtest.shape)<br><br><br><span class="hljs-string">&quot;&quot;&quot;Training dataset&quot;&quot;&quot;</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">TrainDS</span>(<span class="hljs-title class_ inherited__">Dataset</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        self.<span class="hljs-built_in">len</span> = Xtrain.shape[<span class="hljs-number">0</span>]<br>        self.x_data = torch.FloatTensor(Xtrain)<br>        self.y_data = torch.FloatTensor(ytrain)<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__len__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">return</span> self.<span class="hljs-built_in">len</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__getitem__</span>(<span class="hljs-params">self, item</span>):<br>        <span class="hljs-keyword">return</span> self.x_data[item], self.y_data[item]<br><br><br><span class="hljs-string">&quot;&quot;&quot;Testing dataset&quot;&quot;&quot;</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">TestDS</span>(<span class="hljs-title class_ inherited__">Dataset</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        self.<span class="hljs-built_in">len</span> = Xtest.shape[<span class="hljs-number">0</span>]<br>        self.x_data = torch.FloatTensor(Xtest)<br>        self.y_data = torch.FloatTensor(ytest)<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__len__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-keyword">return</span> self.<span class="hljs-built_in">len</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__getitem__</span>(<span class="hljs-params">self, item</span>):<br>        <span class="hljs-keyword">return</span> self.x_data[item], self.y_data[item]<br><br><span class="hljs-comment"># 创建DataLoader</span><br>trainset = TrainDS()<br>testset = TestDS()<br>train_loader = DataLoader(dataset=trainset,batch_size=<span class="hljs-number">256</span>, shuffle=<span class="hljs-literal">True</span>, num_workers=<span class="hljs-number">8</span>)<br>test_loader = DataLoader(dataset=testset, batch_size=<span class="hljs-number">256</span>, shuffle=<span class="hljs-literal">False</span>, num_workers=<span class="hljs-number">8</span>)<br></code></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs bash">HSI data shape: (145, 145, 200)<br>Label shape: (145, 145)<br><br>... ...PCA... ...<br><br>... ... create data cubes ... ...<br>Data cube X shape:  (10249, 25, 25, 30)<br>Data cube y shape:  (10249,)<br><br>... ... create train &amp; <span class="hljs-built_in">test</span> data ... ...<br>Xtrain shape:  (3074, 25, 25, 30)<br>Xtest  shape:  (7175, 25, 25, 30)<br>ytrain  shape:  (3074,)<br>ytest  shape:  (7175,)<br>before transpose: Xtrain shape:  (3074, 25, 25, 30, 1)<br>before transpose: Xtest  shape:  (7175, 25, 25, 30, 1)<br>after transpose: Xtrain shape:  (3074, 1, 30, 25, 25)<br>after transpose: Xtest  shape:  (7175, 1, 30, 25, 25)<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-5-定义损失函数和优化器"><a href="#2-5-定义损失函数和优化器" class="headerlink" title="2.5 定义损失函数和优化器"></a>2.5 定义损失函数和优化器</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">epochs = <span class="hljs-number">100</span><br>criterion = nn.CrossEntropyLoss()<br><br><span class="hljs-comment"># 使用Adam优化器</span><br>optimizer = optim.Adam(mynet.parameters(), lr=<span class="hljs-number">0.00037</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="定义训练和测试函数"><a href="#定义训练和测试函数" class="headerlink" title="定义训练和测试函数"></a>定义训练和测试函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs python">TrainLoss = []<br>TestLoss = []<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">train</span>(<span class="hljs-params">epoch</span>):<br>    mynet.train()<br>    train_loss = <span class="hljs-number">0</span><br><br>    <span class="hljs-keyword">for</span> inputs, Labels <span class="hljs-keyword">in</span> train_loader:<br>        inputs = inputs.cuda()<br>        Labels = Labels.long().cuda()<br><br>        optimizer.zero_grad()               <span class="hljs-comment"># 梯度清零</span><br>        outputs = mynet(inputs)             <span class="hljs-comment"># 前向传播</span><br>        loss = criterion(outputs, Labels)   <span class="hljs-comment"># 计算损失</span><br>        loss.backward()                     <span class="hljs-comment"># 反向传播</span><br>        optimizer.step()                    <span class="hljs-comment"># 更新权重</span><br>        train_loss += loss.item()           <span class="hljs-comment"># 将每个batch的损失加和，得到这一个epoch的损失</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Epoch:&#123;&#125;\tTraining Loss:&#123;:0.6f&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(epoch, train_loss))<br>    TrainLoss.append(train_loss)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">val</span>(<span class="hljs-params">epoch</span>):<br>    mynet.<span class="hljs-built_in">eval</span>()<br>    val_loss = <span class="hljs-number">0</span><br>    gt_labels = []<br>    pred_labels = []<br>    <span class="hljs-keyword">with</span> torch.no_grad():<br>        <span class="hljs-keyword">for</span> inputs, labels <span class="hljs-keyword">in</span> test_loader:<br>            inputs = inputs.cuda()<br>            labels = labels.long().cuda()<br>            outputs = mynet(inputs)<br>            preds = torch.argmax(outputs,<span class="hljs-number">1</span>)<br>            gt_labels.append(labels.cpu().data.numpy())<br>            pred_labels.append(preds.cpu().data.numpy())<br>            loss = criterion(outputs, labels)<br>            val_loss += loss.item()<br>        <span class="hljs-comment"># 将每个batch的pred and gt进行级联，得到这一轮epoch的结果进行计算acc</span><br>        pred_labels = np.concatenate(pred_labels)<br>        gt_labels = np.concatenate(gt_labels)<br>        acc = np.<span class="hljs-built_in">sum</span>(gt_labels==pred_labels)/<span class="hljs-built_in">len</span>(pred_labels)<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Epoch:&#123;&#125;\tValidation Loss: &#123;:.6f&#125;, Accuracy: &#123;:6f&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(epoch, val_loss, acc))<br>        TestLoss.append(val_loss)<br>        <br><br></code></pre></td></tr></table></figure>
+
+<h2 id="2-6-结果处理"><a href="#2-6-结果处理" class="headerlink" title="2.6 结果处理"></a>2.6 结果处理</h2><p>采取训练一轮验证一轮</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">for</span> epoch <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(epochs+<span class="hljs-number">1</span>):<br>    train(epoch)<br>    val(epoch)<br>   <br>plt.plot(np.arange(<span class="hljs-built_in">len</span>(TrainLoss)), TrainLoss, color=<span class="hljs-string">&#x27;blue&#x27;</span>, label=<span class="hljs-string">&#x27;train_loss&#x27;</span>)<br>plt.plot(np.arange(<span class="hljs-built_in">len</span>(TestLoss)), TestLoss, color=<span class="hljs-string">&#x27;red&#x27;</span>, label=<span class="hljs-string">&#x27;val_loss&#x27;</span>)<br>plt.xlabel(<span class="hljs-string">&#x27;epoches&#x27;</span>)<br><span class="hljs-comment"># 显示不同图形的图例</span><br>plt.legend()<br>plt.show()<br></code></pre></td></tr></table></figure>
+
+<p>这里我想计算aa,oa,kappa,采取训练完100轮再测试</p>
+<p>需要改写一下val模型测试函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">val_model</span>():<br>    mynet.<span class="hljs-built_in">eval</span>()<br>    pred_labels = []<br>    <span class="hljs-keyword">with</span> torch.no_grad():<br>        <span class="hljs-keyword">for</span> inputs, labels <span class="hljs-keyword">in</span> test_loader:<br>            inputs = inputs.cuda()<br>            outputs = mynet(inputs)<br>            preds = torch.argmax(outputs,<span class="hljs-number">1</span>)<br>            pred_labels.append(preds.cpu().data.numpy())<br>        pred_labels = np.concatenate(pred_labels)<br>        pred_labels = np.array(pred_labels)<br>        oa, each_acc, aa, kappa = reports(pred_labels, ytest)<br>    <span class="hljs-keyword">return</span> oa, each_acc, aa, kappa, pred_labels<br>    <br><span class="hljs-keyword">for</span> epoch <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(epoches+<span class="hljs-number">1</span>):<br>	train(epoch)<br>    <br>	<br>oa, each_acc, aa, kappa, outputs = val_model()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;oa:<span class="hljs-subst">&#123;oa&#125;</span>\naa:<span class="hljs-subst">&#123;aa&#125;</span>\nkappa:<span class="hljs-subst">&#123;kappa&#125;</span>&#x27;</span>)<br><span class="hljs-built_in">print</span>(each_acc)<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/HSI-classification/" class="category-chain-item">HSI_classification</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>HybirdSN HSI classification</div>
+      <div>http://example.com/2023/05/08/HybirdSN-HSI-classification/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>xiaocao</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年5月8日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/05/06/Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2-%E9%83%A8%E7%BD%B2%E5%88%B0github/" title="Hexo搭建个人博客+部署到github">
+                        <span class="hidden-mobile">Hexo搭建个人博客+部署到github</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script>
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          Fluid.utils.createCssLink('https://lib.baomitu.com/disqusjs/1.3.0/disqusjs.css');
+          Fluid.utils.createScript('https://lib.baomitu.com/disqusjs/1.3.0/disqus.js', function() {
+            new DisqusJS({
+              shortname: 'fluid',
+              apikey: ''
+            });
+          });
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/xiaocao-m" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
