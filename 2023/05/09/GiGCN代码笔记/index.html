@@ -24,8 +24,9 @@
 <meta property="og:description" content="moduletrain1. argparse包2. configparser包configparser是用来读取配置文件（.ini）的包 configParser常用方法:  返回配置文件中节序列config.sections() 返回某个项目中的所有键的序列config.optins(section) 返回section节中，option的键值config.get(section, option">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2023/05/09/GiGCN%E4%BB%A3%E7%A0%81%E7%AC%94%E8%AE%B0/PU.png">
+<meta property="og:image" content="http://example.com/2023/05/09/GiGCN%E4%BB%A3%E7%A0%81%E7%AC%94%E8%AE%B0/SLIC.PNG">
 <meta property="article:published_time" content="2023-05-09T05:46:21.000Z">
-<meta property="article:modified_time" content="2023-05-09T13:52:23.868Z">
+<meta property="article:modified_time" content="2023-05-10T13:58:20.833Z">
 <meta property="article:author" content="xiaocao">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2023/05/09/GiGCN%E4%BB%A3%E7%A0%81%E7%AC%94%E8%AE%B0/PU.png">
@@ -238,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.4k 字
+          4.3k 字
         
       </span>
     
@@ -249,7 +250,7 @@
         
         
         
-          20 分钟
+          36 分钟
         
       </span>
     
@@ -313,7 +314,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2023年5月9日 晚上
+                    本文最后更新于：2023年5月10日 晚上
                   
                 
               </p>
@@ -371,6 +372,9 @@
 <h2 id="6-form-PIL-import-Image"><a href="#6-form-PIL-import-Image" class="headerlink" title="6. form PIL import Image"></a>6. form PIL import Image</h2><p>Python Imaging Library(PIL)支持常见的图像格式，常用于操作二维像素点、线、文字，以及对现有图片进行缩放、变形、通道处理，可以实现创建缩略图、转换文件格式、打印图像、转换图片编码格式、比较图片差异等操作。</p>
 <h3 id="6-1-PIL的Image模块"><a href="#6-1-PIL的Image模块" class="headerlink" title="6.1 PIL的Image模块"></a>6.1 PIL的Image模块</h3><p>用途：</p>
 <p>提供一个与模块同名的类。用来表示一个PIL图像。这个模块同时提供一些工厂函数，包括从文件读取图像的函数及创建新图像的函数</p>
+<ol>
+<li>Image 方法读取、显示图像</li>
+</ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> PIL <span class="hljs-keyword">import</span> Image<br>im=Image.<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;data/rgb/PaviaU_rgb.jpg&#x27;</span>)<br><span class="hljs-built_in">print</span>(im.width)<br><span class="hljs-built_in">print</span>(im.height)<br><span class="hljs-built_in">print</span>(im.mode)<br>im.show()<br></code></pre></td></tr></table></figure>
 
 <p>输出：</p>
@@ -378,12 +382,66 @@
 
 <img src="PU.png" srcset="/img/loading.gif" lazyload  width="340"  height = "610" />
 
+<ol start="2">
+<li>Image方法将图像与ndarray数组相互转换</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> PIL <span class="hljs-keyword">import</span> Image<br>im=Image.<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;data/rgb/PaviaU_rgb.jpg&#x27;</span>)<br>img = np.array(im)<br><span class="hljs-built_in">print</span>(im)<br><span class="hljs-built_in">print</span>(img)<br><span class="hljs-built_in">print</span>(img.shape)<br>img2 = Image.fromarray(np.uint8(img))<span class="hljs-comment"># 注意这里要转换一下</span><br>img2.show()<br></code></pre></td></tr></table></figure>
+
+<p>output:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash">&lt;PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=340x610 at 0x7F3B06C6EBE0&gt;<br>[[[ 8 17 22]<br>  [ 7 16 23]<br>  [ 5 12 20]<br>  ...<br>  [43 44 26]<br>  [44 45 27]<br>  [41 42 24]]<br><br> [[11 20 27]<br>  [ 5 12 20]<br>  [ 0  6 14]<br>  ...<br>  (610, 340, 3)<br></code></pre></td></tr></table></figure>
+
+
+
+<p>可以看出使用<code>Image.open()</code>读取图像后的格式为PIL的专属格式，<code>np.array()</code>以后转换为像素值数组</p>
 <h2 id="7-math方法"><a href="#7-math方法" class="headerlink" title="7. math方法"></a>7. math方法</h2><ul>
 <li>math.round(a, b)对a保留b位小数</li>
 <li>math.ceil()向上取整</li>
 <li>math.floor()向下取整</li>
 </ul>
 <h2 id="8-skimage-segementation-slic超像素分割"><a href="#8-skimage-segementation-slic超像素分割" class="headerlink" title="8. skimage.segementation.slic超像素分割"></a>8. skimage.segementation.slic超像素分割</h2><p>skimage作为图像处理库，包括多种图像分割算法。其中超像素slic目前表现较好.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> skimage.segmentation <span class="hljs-keyword">import</span> slic, mark_boundaries<br><span class="hljs-keyword">from</span> PIL <span class="hljs-keyword">import</span> Image<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-comment"># 读取图像</span><br>img = Image.<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;data/rgb/PaviaU_rgb.jpg&#x27;</span>)<br><span class="hljs-comment"># 转换为数组</span><br>img = np.array(img)<br><span class="hljs-comment"># 分割</span><br>seg = slic(img, n_segments=<span class="hljs-number">100</span>, compactness=<span class="hljs-number">20</span>)<br><span class="hljs-built_in">print</span>(seg.shape)<br><span class="hljs-comment"># 将原图像分割的边界结合到一张图上</span><br>out = mark_boundaries(img, seg)<br><span class="hljs-comment"># 数据经过了归一化处理，要回到原来的像素值</span><br>out = out * <span class="hljs-number">255</span><br><span class="hljs-comment"># 数组转换为PIL格式图像并显示</span><br>img1 = Image.fromarray(np.uint8(out))<span class="hljs-comment"># 该方法不支持float32格式数据，转换为uint8</span><br>img1.show()<br></code></pre></td></tr></table></figure>
+
+<p>output:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">(610, 340)<br><span class="hljs-comment"># typora设置图片格式</span><br>&lt;img src=<span class="hljs-string">&quot;path&quot;</span> height=<span class="hljs-string">&quot; &quot;</span> width=<span class="hljs-string">&quot; &quot;</span> align=left /&gt;<br></code></pre></td></tr></table></figure>
+
+<img src="SLIC.PNG" srcset="/img/loading.gif" lazyload height="610" width="340" align=center>
+
+
+
+
+
+<h1 id="utils"><a href="#utils" class="headerlink" title="utils"></a>utils</h1><h2 id="1-cv2"><a href="#1-cv2" class="headerlink" title="1. cv2"></a>1. cv2</h2><h3 id="1-1-cv2不提示相关函数问题"><a href="#1-1-cv2不提示相关函数问题" class="headerlink" title="1.1 cv2不提示相关函数问题"></a>1.1 cv2不提示相关函数问题</h3><p>解决方案：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip install opencv-contrib-python==4.5.5.64<br></code></pre></td></tr></table></figure>
+
+<p>适用于:python3.7 python3.8 python3.9解释器</p>
+<h3 id="1-2-cv2-dilate"><a href="#1-2-cv2-dilate" class="headerlink" title="1.2 cv2.dilate()"></a>1.2 cv2.dilate()</h3><p>cv2.dilate()膨胀：将前景物体变大，理解成将图像断开裂缝变小（在图片上画上黑色印记，印记越来越小）</p>
+<h2 id="2-np-nonzero-a"><a href="#2-np-nonzero-a" class="headerlink" title="2. np.nonzero(a)"></a>2. np.nonzero(a)</h2><p>返回数组<code>a</code>中非0元素的索引(两个数组)，如果该数组为bool数组，则返回True的索引。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">a = [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>],<br>     [<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],<br>     [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>]<br>    ]<br>np.nonzero(a)<br></code></pre></td></tr></table></figure>
+
+<p>output:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">(array([0, 1, 2]), array([2, 0, 1]))<br></code></pre></td></tr></table></figure>
+
+<p>第一个数组为行对应的非0元素索引，第二个数组为列对应的非0元素索引。即：</p>
+<p><code>(0, 2), (1, 0), (2, 1)</code>, 那如何像这样输出索引呢？用<code>zip(*)</code></p>
+<p>zip() 函数用于将可迭代的对象作为参数，将对象中对应的元素打包成一个个元组</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">a = [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>],<br>     [<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],<br>     [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>]<br>    ]<br>indx = <span class="hljs-built_in">list</span>(<span class="hljs-built_in">zip</span>(*np.nonzero(a))) <span class="hljs-comment"># zip后数据变为zip类型，用list转换成列表</span><br>indx<br></code></pre></td></tr></table></figure>
+
+<p>output:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">[(0, 2), (1, 0), (2, 1)]<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-np-unique-a"><a href="#3-np-unique-a" class="headerlink" title="3. np.unique(a)"></a>3. np.unique(a)</h2><p>由小到大返回a中无重复的数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">a = np.unique(seg)<br><span class="hljs-built_in">print</span>(a)<br><span class="hljs-built_in">type</span>(a)<br></code></pre></td></tr></table></figure>
+
+<p>output:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">[   1    2    3 ... 2013 2014 2015]<br>numpy.ndarray<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-np-full"><a href="#4-np-full" class="headerlink" title="4. np.full()"></a>4. np.full()</h2><p><code>np.full(shape, fill_value, dtype)</code></p>
+<p>Return a new array of given shape and type, filled with fill_value</p>
+<p>返回一个给定形状和类型的新数组，数组里面的值为fill_value</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">a = np.full(shape=(<span class="hljs-number">5</span>,<span class="hljs-number">5</span>),fill_value=-<span class="hljs-number">1</span>,dtype=np.int32)<br>a<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">[[-1 -1 -1 -1 -1]<br> [-1 -1 -1 -1 -1]<br> [-1 -1 -1 -1 -1]<br> [-1 -1 -1 -1 -1]<br> [-1 -1 -1 -1 -1]]<br></code></pre></td></tr></table></figure>
+
 
                 
               </div>
@@ -543,6 +601,12 @@
 
 
   
+
+
+  
+  
+
+
 
 
 
@@ -736,6 +800,49 @@
 
 
   <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script  src="/js/local-search.js" ></script>
 
