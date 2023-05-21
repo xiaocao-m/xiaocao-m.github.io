@@ -16,17 +16,17 @@
   <meta name="author" content="xiaocao">
   <meta name="keywords" content="">
   
-    <meta name="description" content="moduletrain1. argparse包2. configparser包configparser是用来读取配置文件（.ini）的包 configParser常用方法:  返回配置文件中节序列config.sections() 返回某个项目中的所有键的序列config.optins(section) 返回section节中，option的键值config.get(section, option">
+    <meta name="description" content="一、module二、train1. argparse包2. configparser包configparser是用来读取配置文件（.ini）的包 configParser常用方法:  返回配置文件中节序列config.sections() 返回某个项目中的所有键的序列config.optins(section) 返回section节中，option的键值config.get(section, op">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GiGCN代码笔记">
 <meta property="og:url" content="http://example.com/2023/05/09/GiGCN%E4%BB%A3%E7%A0%81%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="xiaocao&#39;s Blog">
-<meta property="og:description" content="moduletrain1. argparse包2. configparser包configparser是用来读取配置文件（.ini）的包 configParser常用方法:  返回配置文件中节序列config.sections() 返回某个项目中的所有键的序列config.optins(section) 返回section节中，option的键值config.get(section, option">
+<meta property="og:description" content="一、module二、train1. argparse包2. configparser包configparser是用来读取配置文件（.ini）的包 configParser常用方法:  返回配置文件中节序列config.sections() 返回某个项目中的所有键的序列config.optins(section) 返回section节中，option的键值config.get(section, op">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2023/05/09/GiGCN%E4%BB%A3%E7%A0%81%E7%AC%94%E8%AE%B0/PU.png">
 <meta property="og:image" content="http://example.com/2023/05/09/GiGCN%E4%BB%A3%E7%A0%81%E7%AC%94%E8%AE%B0/SLIC.PNG">
 <meta property="article:published_time" content="2023-05-09T05:46:21.000Z">
-<meta property="article:modified_time" content="2023-05-10T13:58:20.833Z">
+<meta property="article:modified_time" content="2023-05-17T14:13:23.136Z">
 <meta property="article:author" content="xiaocao">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2023/05/09/GiGCN%E4%BB%A3%E7%A0%81%E7%AC%94%E8%AE%B0/PU.png">
@@ -239,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.3k 字
+          5.4k 字
         
       </span>
     
@@ -250,7 +250,7 @@
         
         
         
-          36 分钟
+          46 分钟
         
       </span>
     
@@ -314,7 +314,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2023年5月10日 晚上
+                    本文最后更新于：2023年5月17日 晚上
                   
                 
               </p>
@@ -322,7 +322,7 @@
             
               <div class="markdown-body">
                 
-                <h1 id="module"><a href="#module" class="headerlink" title="module"></a>module</h1><h1 id="train"><a href="#train" class="headerlink" title="train"></a>train</h1><h2 id="1-argparse包"><a href="#1-argparse包" class="headerlink" title="1. argparse包"></a>1. argparse包</h2><h2 id="2-configparser包"><a href="#2-configparser包" class="headerlink" title="2. configparser包"></a>2. configparser包</h2><p>configparser是用来读取配置文件（<code>.ini</code>）的包</p>
+                <h1 id="一、module"><a href="#一、module" class="headerlink" title="一、module"></a>一、module</h1><h1 id="二、train"><a href="#二、train" class="headerlink" title="二、train"></a>二、train</h1><h2 id="1-argparse包"><a href="#1-argparse包" class="headerlink" title="1. argparse包"></a>1. argparse包</h2><h2 id="2-configparser包"><a href="#2-configparser包" class="headerlink" title="2. configparser包"></a>2. configparser包</h2><p>configparser是用来读取配置文件（<code>.ini</code>）的包</p>
 <p><strong>configParser常用方法</strong>:</p>
 <ol>
 <li>返回配置文件中节序列<code>config.sections()</code></li>
@@ -410,7 +410,7 @@
 
 
 
-<h1 id="utils"><a href="#utils" class="headerlink" title="utils"></a>utils</h1><h2 id="1-cv2"><a href="#1-cv2" class="headerlink" title="1. cv2"></a>1. cv2</h2><h3 id="1-1-cv2不提示相关函数问题"><a href="#1-1-cv2不提示相关函数问题" class="headerlink" title="1.1 cv2不提示相关函数问题"></a>1.1 cv2不提示相关函数问题</h3><p>解决方案：</p>
+<h1 id="三、utils"><a href="#三、utils" class="headerlink" title="三、utils"></a>三、utils</h1><h2 id="1-cv2"><a href="#1-cv2" class="headerlink" title="1. cv2"></a>1. cv2</h2><h3 id="1-1-cv2不提示相关函数问题"><a href="#1-1-cv2不提示相关函数问题" class="headerlink" title="1.1 cv2不提示相关函数问题"></a>1.1 cv2不提示相关函数问题</h3><p>解决方案：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip install opencv-contrib-python==4.5.5.64<br></code></pre></td></tr></table></figure>
 
 <p>适用于:python3.7 python3.8 python3.9解释器</p>
@@ -441,6 +441,22 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">a = np.full(shape=(<span class="hljs-number">5</span>,<span class="hljs-number">5</span>),fill_value=-<span class="hljs-number">1</span>,dtype=np.int32)<br>a<br></code></pre></td></tr></table></figure>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">[[-1 -1 -1 -1 -1]<br> [-1 -1 -1 -1 -1]<br> [-1 -1 -1 -1 -1]<br> [-1 -1 -1 -1 -1]<br> [-1 -1 -1 -1 -1]]<br></code></pre></td></tr></table></figure>
+
+<h1 id="四、TrainTestSpilt"><a href="#四、TrainTestSpilt" class="headerlink" title="四、TrainTestSpilt"></a>四、TrainTestSpilt</h1><h2 id="1-a-ravel"><a href="#1-a-ravel" class="headerlink" title="1. a.ravel()"></a>1. a.ravel()</h2><p>将数组a展平到一维(一行一行来)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">a = np.random.randn(<span class="hljs-number">3</span>, <span class="hljs-number">3</span>)<br><span class="hljs-built_in">print</span>(a)<br><span class="hljs-built_in">print</span>(a.ravel().shape)<span class="hljs-comment"># 其实是一个列</span><br>a.ravel()<br></code></pre></td></tr></table></figure>
+
+<p>output:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">[[ 0.68311515  0.61541106  0.29958465]<br> [ 0.59864375 -0.44822573  0.52080079]<br> [-0.41985846 -0.94098097  1.23171998]]<br>(9,)<br>[ 0.596536   -0.18750525 -0.73556853 -0.59429671 -0.29061327  0.75020979<br>  0.21813552  0.2318064   0.50236014]<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="2-np-zeros-like-a"><a href="#2-np-zeros-like-a" class="headerlink" title="2. np.zeros_like(a)"></a>2. np.zeros_like(a)</h2><p>Return an array of zeros with the same shape and type as a given array.</p>
+<p>返回形状为a.shape的全0数组</p>
+<h2 id="3-random-sample-sequences-K"><a href="#3-random-sample-sequences-K" class="headerlink" title="3. random.sample(sequences, K)"></a>3. random.sample(sequences, K)</h2><p>从序列sequenxes中随机获取指定长度K的片断。sample函数不会修改原有序列。 如果k大于sequence元素个数的话会报错。</p>
+<h1 id="五、Trainer"><a href="#五、Trainer" class="headerlink" title="五、Trainer"></a>五、Trainer</h1><h2 id="5-1-tqdm"><a href="#5-1-tqdm" class="headerlink" title="5.1 tqdm"></a>5.1 tqdm</h2><p><code>Tqdm </code>是 <code>Python</code> 进度条库，可以在 <code>Python </code>长循环中添加一个进度提示信息。用户只需要封装任意的迭代器，是一个快速、扩展性强的进度条工具库。</p>
+<h2 id="5-2-format"><a href="#5-2-format" class="headerlink" title="5.2 format"></a>5.2 format</h2><p>format是Python中用于格式化字符串的方法。它可以将变量或常量插入到字符串中，并按照指定的格式进行输出。使用format方法可以使代码更加简洁和易读。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python">name = <span class="hljs-string">&#x27;xiaoming&#x27;</span><br>age = <span class="hljs-number">18.366666</span><br><span class="hljs-comment"># 不指定位置则按顺序来</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;My name is &#123;&#125;, I am &#123;&#125; years old&#x27;</span>.<span class="hljs-built_in">format</span>(name, age))<br><span class="hljs-comment"># 指定位置,注意从0开始</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;My name is &#123;0&#125;, I am &#123;1:.2f&#125; years old, &#123;0&#125; is a good boy.&#x27;</span>.<span class="hljs-built_in">format</span>(name, age))<br><span class="hljs-comment"># 还可以在花括号中使用冒号来指定输出格式</span><br>num = <span class="hljs-number">3.1415926</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;保留两位小数：&#123;:.2f&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(num))<br></code></pre></td></tr></table></figure>
+
+<p>output:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">My name is xiaoming, I am 18.366666 years old<br>My name is xiaoming, I am 18.37 years old, xiaoming is a good boy.<br>保留两位小数：3.14<br></code></pre></td></tr></table></figure>
 
 
                 
@@ -524,6 +540,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/05/15/GIGCN-paper-note/" title="GIGCN_paper_note">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">GIGCN_paper_note</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
