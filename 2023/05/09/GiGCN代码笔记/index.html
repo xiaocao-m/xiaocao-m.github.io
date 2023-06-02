@@ -23,13 +23,14 @@
 <meta property="og:site_name" content="xiaocao&#39;s Blog">
 <meta property="og:description" content="一、module二、train1. argparse包2. configparser包configparser是用来读取配置文件（.ini）的包 configParser常用方法:  返回配置文件中节序列config.sections() 返回某个项目中的所有键的序列config.optins(section) 返回section节中，option的键值config.get(section, op">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/05/09/GiGCN%E4%BB%A3%E7%A0%81%E7%AC%94%E8%AE%B0/visdom.png">
 <meta property="og:image" content="http://example.com/2023/05/09/GiGCN%E4%BB%A3%E7%A0%81%E7%AC%94%E8%AE%B0/PU.png">
 <meta property="og:image" content="http://example.com/2023/05/09/GiGCN%E4%BB%A3%E7%A0%81%E7%AC%94%E8%AE%B0/SLIC.PNG">
 <meta property="article:published_time" content="2023-05-09T05:46:21.000Z">
-<meta property="article:modified_time" content="2023-05-17T14:13:23.136Z">
+<meta property="article:modified_time" content="2023-05-30T05:58:01.252Z">
 <meta property="article:author" content="xiaocao">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2023/05/09/GiGCN%E4%BB%A3%E7%A0%81%E7%AC%94%E8%AE%B0/PU.png">
+<meta name="twitter:image" content="http://example.com/2023/05/09/GiGCN%E4%BB%A3%E7%A0%81%E7%AC%94%E8%AE%B0/visdom.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -239,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.4k 字
+          6.3k 字
         
       </span>
     
@@ -250,7 +251,7 @@
         
         
         
-          46 分钟
+          53 分钟
         
       </span>
     
@@ -314,7 +315,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2023年5月17日 晚上
+                    本文最后更新于：2023年5月30日 下午
                   
                 
               </p>
@@ -336,7 +337,16 @@
 
 
 
-<h2 id="3-visdom包"><a href="#3-visdom包" class="headerlink" title="3. visdom包"></a>3. visdom包</h2><h2 id="4-sklearn-preprocessing数据预处理"><a href="#4-sklearn-preprocessing数据预处理" class="headerlink" title="4. sklearn.preprocessing数据预处理"></a>4. sklearn.preprocessing数据预处理</h2><h3 id="4-1-Z-Score标准化（zero-mean-normalization）"><a href="#4-1-Z-Score标准化（zero-mean-normalization）" class="headerlink" title="4.1 Z-Score标准化（zero-mean normalization）"></a>4.1 Z-Score标准化（zero-mean normalization）</h3><p>也叫标准差标准化。将数据按属性（按列）减去均值，后除以均方根。提高了数据可比性，同时削弱了数据解释性，是用的最多的数据的标准化方法。输出：每个属性（梅列）均值为0，方差为1，呈正态分布。</p>
+<h2 id="3-visdom包监听多个数据"><a href="#3-visdom包监听多个数据" class="headerlink" title="3. visdom包监听多个数据"></a>3. visdom包监听多个数据</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs pyth"># 导入包<br>import time<br><br>import numpy as np<br>from visdom import Visdom<br># 必须要实例化<br>viz = Visdom()<br># 在训练前初始化窗口信息<br>viz.line(Y=[[0.,0.]], # Y的第一个坐标,注意这里的Y又用一个中括号括起来<br>         X=[0], # X的第一个坐标<br>         win=&#x27;train_loss&#x27;, # 窗口的name<br>         opts=dict(title=&#x27;train_loss&#x27;) # 图像的标例<br>)<br># 在训练过程中更新数据<br>for epoch in range(10):<br>    # 随机获取一个loss<br>    loss = 0.2*np.random.randn()+1<br>    acc = 0.1*np.random.randn()+0.5<br>    # 记录loss<br>    viz.line([[loss,acc]],[epoch], win=&#x27;train_loss&#x27;, update=&#x27;append&#x27;)<br>    time.sleep(0.5)<br></code></pre></td></tr></table></figure>
+
+<p>output:</p>
+<img src="visdom.png" srcset="/img/loading.gif" lazyload width="500">
+
+
+
+
+
+<h2 id="4-sklearn-preprocessing数据预处理"><a href="#4-sklearn-preprocessing数据预处理" class="headerlink" title="4. sklearn.preprocessing数据预处理"></a>4. sklearn.preprocessing数据预处理</h2><h3 id="4-1-Z-Score标准化（zero-mean-normalization）"><a href="#4-1-Z-Score标准化（zero-mean-normalization）" class="headerlink" title="4.1 Z-Score标准化（zero-mean normalization）"></a>4.1 Z-Score标准化（zero-mean normalization）</h3><p>也叫标准差标准化。将数据按属性（按列）减去均值，后除以均方根。提高了数据可比性，同时削弱了数据解释性，是用的最多的数据的标准化方法。输出：每个属性（梅列）均值为0，方差为1，呈正态分布。</p>
 <p>公式为：<br>$$<br>\frac{X-mean}{std}<br>$$</p>
 <p>实现</p>
 <ol>
@@ -399,6 +409,13 @@
 <li>math.floor()向下取整</li>
 </ul>
 <h2 id="8-skimage-segementation-slic超像素分割"><a href="#8-skimage-segementation-slic超像素分割" class="headerlink" title="8. skimage.segementation.slic超像素分割"></a>8. skimage.segementation.slic超像素分割</h2><p>skimage作为图像处理库，包括多种图像分割算法。其中超像素slic目前表现较好.</p>
+<p><code>slic(img_array, n_segements, compactness)</code></p>
+<p>参数：</p>
+<ul>
+<li>img_array : 2D, 3D or 4D ndarray</li>
+<li>n_segement : 分割输出图像中标签的（近似）数量。</li>
+<li>compactness : 平衡颜色接近度和空间接近度。值越大相邻边的权重就越大。</li>
+</ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> skimage.segmentation <span class="hljs-keyword">import</span> slic, mark_boundaries<br><span class="hljs-keyword">from</span> PIL <span class="hljs-keyword">import</span> Image<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-comment"># 读取图像</span><br>img = Image.<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;data/rgb/PaviaU_rgb.jpg&#x27;</span>)<br><span class="hljs-comment"># 转换为数组</span><br>img = np.array(img)<br><span class="hljs-comment"># 分割</span><br>seg = slic(img, n_segments=<span class="hljs-number">100</span>, compactness=<span class="hljs-number">20</span>)<br><span class="hljs-built_in">print</span>(seg.shape)<br><span class="hljs-comment"># 将原图像分割的边界结合到一张图上</span><br>out = mark_boundaries(img, seg)<br><span class="hljs-comment"># 数据经过了归一化处理，要回到原来的像素值</span><br>out = out * <span class="hljs-number">255</span><br><span class="hljs-comment"># 数组转换为PIL格式图像并显示</span><br>img1 = Image.fromarray(np.uint8(out))<span class="hljs-comment"># 该方法不支持float32格式数据，转换为uint8</span><br>img1.show()<br></code></pre></td></tr></table></figure>
 
 <p>output:</p>
@@ -457,6 +474,23 @@
 
 <p>output:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">My name is xiaoming, I am 18.366666 years old<br>My name is xiaoming, I am 18.37 years old, xiaoming is a good boy.<br>保留两位小数：3.14<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-3-tensor在CPU、GPU、numpy之间相互转换"><a href="#5-3-tensor在CPU、GPU、numpy之间相互转换" class="headerlink" title="5.3 tensor在CPU、GPU、numpy之间相互转换"></a>5.3 tensor在CPU、GPU、numpy之间相互转换</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs pyt"># 指定GPU<br>device = torch.device(&#x27;cuda&#x27; if torch.cuda.is_available() else &#x27;cpu&#x27;)<br></code></pre></td></tr></table></figure>
+
+<p>CPU tensor convert to GPU tensor</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs py">a = a.cuda()<br></code></pre></td></tr></table></figure>
+
+<p>GPU tensor convert to CPU tensor</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs py">a = a.cpu()<br></code></pre></td></tr></table></figure>
+
+<p>numpy to CPU tensor</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs py">a = torch.form_numpy(a)<br></code></pre></td></tr></table></figure>
+
+<p>CPU tensor to numpy</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs py">a = a.numpy()<br></code></pre></td></tr></table></figure>
+
+<p><strong>GPU张量不能直接转换为numpy数组，必须先转到CPU</strong></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs py">a.cpu().numpy()<br></code></pre></td></tr></table></figure>
 
 
                 
